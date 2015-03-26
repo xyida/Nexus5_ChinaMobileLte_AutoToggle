@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -26,17 +27,50 @@ public class CallEndService extends Service {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		CallEndReciver callEndReciver=new CallEndReciver();
-		IntentFilter filter=new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-		registerReceiver(callEndReciver, filter);
+//		CallEndReciver callEndReciver=new CallEndReciver();
+//		IntentFilter filter=new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+//		registerReceiver(callEndReciver, filter);
+		Log.e("yoda", "服务启动!");
 		
+		final TelephonyManager manager=(TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+		manager.listen(new PhoneStateListener(){
+			
+			@Override
+			public void onCallStateChanged(int state, String incomingNumber) {
+				// TODO Auto-generated method stub
+				Log.e("yoda-onCallState", String.valueOf(state));
+				super.onCallStateChanged(state, incomingNumber);
+				if (state==TelephonyManager.CALL_STATE_IDLE) {
+					Log.e("yoda", "挂断电话==>"+state);
+					Log.e("yoda-networktype", String.valueOf(manager.getNetworkType()));
+//							delay(2000);
+							CallEndService.cmdMethod(NetWorkType.LTEONLY);
+							Log.e("yoda", "切换LTE only");
+							delay(5000);
+							CallEndService.cmdMethod(NetWorkType.LTEGSMAUTO);
+							Log.e("yoda", "切换LTE/GSM auto");
+							Log.e("yoda-networktype", String.valueOf(manager.getNetworkType()));
+				}
+			}
+			
+		}, PhoneStateListener.LISTEN_CALL_STATE);
 		
+	}
+	public void delay(int i){
+		try {
+			Thread.sleep(i);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
+		Log.e("yoda", "CallEndService OnDestroy!");
 		super.onDestroy();
+		
 	}
 
 	@Override

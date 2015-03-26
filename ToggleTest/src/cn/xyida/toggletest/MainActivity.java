@@ -39,9 +39,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		telephonyManager=(TelephonyManager)getSystemService(TELEPHONY_SERVICE);
 		prepareUI();
-		Intent intent=new Intent();
-		intent.setClass(MainActivity.this, CallEndService.class);
-		startService(intent);
+//		Intent intent=new Intent();
+//		intent.setClass(MainActivity.this, CallEndService.class);
+//		startService(intent);
 		
 		
 
