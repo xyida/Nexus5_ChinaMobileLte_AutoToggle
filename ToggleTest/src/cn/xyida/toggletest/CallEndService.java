@@ -6,7 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -16,11 +19,14 @@ import android.os.Message;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 public class CallEndService extends Service {
 	private static final int COMMAND = 1;
-	private static final int DELAY = 5000;
-
+	private static final int DELAY = 15000;
+//	private static int currNetworkType = 9;
+	private static int toggleNetworkType=9;
+//	RemoteViews rviews;
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -30,10 +36,14 @@ public class CallEndService extends Service {
 				String type = "LTE/GSM auto";
 				switch ((NetWorkType) msg.obj) {
 				case LTEONLY:
+//					currNetworkType = 11;
+					toggleNetworkType=9;
 					type = "LTE only";
 					break;
 
 				case LTEGSMAUTO:
+//					currNetworkType = 9;
+					toggleNetworkType=11;
 					type = "LTE/GSM auto";
 					break;
 				}
@@ -58,60 +68,112 @@ public class CallEndService extends Service {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
 		Log.e("yoda", "服务启动!");
+		
 
-		final TelephonyManager manager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
-		manager.listen(new PhoneStateListener() {
+//		RemoteViews rviews=new RemoteViews(getPackageName(), R.layout.widget_layout);
+//		Intent it=new Intent();
+//		it.setAction("WIDGET_CLICK_ACTION");
+//		it.setClass(getApplicationContext(),CallEndService.class);
+//		PendingIntent pendingIntent=PendingIntent.getService(getApplicationContext(), 0, it, 0);
+//		rviews.setOnClickPendingIntent(R.id.imageView1, pendingIntent);
+		
+		// 处理widget点击事件
+		AppWidgetManager appWidgetManager=AppWidgetManager.getInstance(this);
+		ComponentName provider=new ComponentName(this, WidgetProvider.class);
+		Log.e("yoda", "CallEndService接受到广播"+intent.getAction());
+		if ("WIDGET_CLICK_ACTION".equals(intent.getAction())) {
+			Log.e("yoda", "CallEndService-widget按钮被点击");
+			RemoteViews rviews = new RemoteViews(this.getPackageName(),
+					R.layout.widget_layout);
+			int srcId=R.drawable.ltegsmauto;
+			Message msg=null;
+			switch (toggleNetworkType) {
+			case 9:
+				msg = handler.obtainMessage();
+				msg.what = COMMAND;
+				msg.obj = NetWorkType.LTEGSMAUTO;
+				handler.sendMessage(msg);
+				break;
 
-			@Override
-			public void onCallStateChanged(int state, String incomingNumber) {
-				// TODO Auto-generated method stub
-				Log.e("yoda-onCallState", String.valueOf(state));
-				super.onCallStateChanged(state, incomingNumber);
-				if (state == TelephonyManager.CALL_STATE_IDLE) {
-					Log.e("yoda", "挂断电话==>" + state);
-					Log.e("yoda-networktype",
-							String.valueOf(manager.getNetworkType()));
-
-					Thread thread = new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							Message msg = handler.obtainMessage();
-							msg.what = COMMAND;
-							msg.obj = NetWorkType.LTEONLY;
-							handler.sendMessage(msg);
-
-							try {
-								Thread.sleep(DELAY);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							Message msg2 = handler.obtainMessage();
-							msg2.what = COMMAND;
-							msg2.obj = NetWorkType.LTEGSMAUTO;
-							handler.sendMessage(msg2);
-						}
-					});
-					thread.start();
-
-				}
+			case 11:
+				msg = handler.obtainMessage();
+				msg.what = COMMAND;
+				msg.obj = NetWorkType.LTEONLY;
+				handler.sendMessage(msg);
+				break;
 			}
+			
+			switch (toggleNetworkType) {
+			case 9:
+				srcId=R.drawable.ltegsmauto;
+				break;
 
-		}, PhoneStateListener.LISTEN_CALL_STATE);
+			case 11:
+				srcId=R.drawable.lteonly;
+				break;
+			}
+			rviews.setImageViewResource(R.id.imageView1, srcId);
+			appWidgetManager.updateAppWidget(provider, rviews);
+		}
+
+		
 
 	}
-
+   
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		// CallEndReciver callEndReciver=new CallEndReciver();
-		// IntentFilter filter=new
-		// IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-		// registerReceiver(callEndReciver, filter);
+		// 处理通话结束事件
+				final TelephonyManager manager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+				manager.listen(new PhoneStateListener() {
 
+					@Override
+					public void onCallStateChanged(int state, String incomingNumber) {
+						// TODO Auto-generated method stub
+						Log.e("yoda-onCallState", String.valueOf(state));
+						super.onCallStateChanged(state, incomingNumber);
+						if (state == TelephonyManager.CALL_STATE_IDLE) {
+							Log.e("yoda", "挂断电话==>" + state);
+							Log.e("yoda-networktype",
+									String.valueOf(manager.getNetworkType()));
+
+							Thread thread = new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									try {
+										Thread.sleep(3000);
+										Log.e("yoda", "延时:" + 3000 + "秒");
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									Message msg = handler.obtainMessage();
+									msg.what = COMMAND;
+									msg.obj = NetWorkType.LTEONLY;
+									handler.sendMessage(msg);
+
+									try {
+										Thread.sleep(DELAY);
+										Log.e("yoda", "延时:" + DELAY + "秒");
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									Message msg2 = handler.obtainMessage();
+									msg2.what = COMMAND;
+									msg2.obj = NetWorkType.LTEGSMAUTO;
+									handler.sendMessage(msg2);
+								}
+							});
+							thread.start();
+
+						}
+					}
+
+				}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
 
 	@Override
