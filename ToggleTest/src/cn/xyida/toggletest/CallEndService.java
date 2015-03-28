@@ -10,12 +10,41 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class CallEndService extends Service {
+	private static final int COMMAND = 1;
+	private static final int DELAY = 5000;
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case COMMAND:
+
+				CallEndService.cmdMethod((NetWorkType) msg.obj);
+				String type = "LTE/GSM auto";
+				switch ((NetWorkType) msg.obj) {
+				case LTEONLY:
+					type = "LTE only";
+					break;
+
+				case LTEGSMAUTO:
+					type = "LTE/GSM auto";
+					break;
+				}
+				Log.e("yoda", "ÇÐ»»" + type);
+
+				break;
+
+			}
+
+		}
+	};
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -24,45 +53,65 @@ public class CallEndService extends Service {
 	}
 
 	@Override
-	public void onCreate() {
+	@Deprecated
+	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
-		super.onCreate();
-//		CallEndReciver callEndReciver=new CallEndReciver();
-//		IntentFilter filter=new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-//		registerReceiver(callEndReciver, filter);
+		super.onStart(intent, startId);
 		Log.e("yoda", "·þÎñÆô¶¯!");
-		
-		final TelephonyManager manager=(TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
-		manager.listen(new PhoneStateListener(){
-			
+
+		final TelephonyManager manager = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+		manager.listen(new PhoneStateListener() {
+
 			@Override
 			public void onCallStateChanged(int state, String incomingNumber) {
 				// TODO Auto-generated method stub
 				Log.e("yoda-onCallState", String.valueOf(state));
 				super.onCallStateChanged(state, incomingNumber);
-				if (state==TelephonyManager.CALL_STATE_IDLE) {
-					Log.e("yoda", "¹Ò¶Ïµç»°==>"+state);
-					Log.e("yoda-networktype", String.valueOf(manager.getNetworkType()));
-//							delay(2000);
-							CallEndService.cmdMethod(NetWorkType.LTEONLY);
-							Log.e("yoda", "ÇÐ»»LTE only");
-							delay(5000);
-							CallEndService.cmdMethod(NetWorkType.LTEGSMAUTO);
-							Log.e("yoda", "ÇÐ»»LTE/GSM auto");
-							Log.e("yoda-networktype", String.valueOf(manager.getNetworkType()));
+				if (state == TelephonyManager.CALL_STATE_IDLE) {
+					Log.e("yoda", "¹Ò¶Ïµç»°==>" + state);
+					Log.e("yoda-networktype",
+							String.valueOf(manager.getNetworkType()));
+
+					Thread thread = new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							Message msg = handler.obtainMessage();
+							msg.what = COMMAND;
+							msg.obj = NetWorkType.LTEONLY;
+							handler.sendMessage(msg);
+
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							Message msg2 = handler.obtainMessage();
+							msg2.what = COMMAND;
+							msg2.obj = NetWorkType.LTEGSMAUTO;
+							handler.sendMessage(msg2);
+						}
+					});
+					thread.start();
+
 				}
 			}
-			
+
 		}, PhoneStateListener.LISTEN_CALL_STATE);
-		
+
 	}
-	public void delay(int i){
-		try {
-			Thread.sleep(i);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		// CallEndReciver callEndReciver=new CallEndReciver();
+		// IntentFilter filter=new
+		// IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+		// registerReceiver(callEndReciver, filter);
+
 	}
 
 	@Override
@@ -70,7 +119,7 @@ public class CallEndService extends Service {
 		// TODO Auto-generated method stub
 		Log.e("yoda", "CallEndService OnDestroy!");
 		super.onDestroy();
-		
+
 	}
 
 	@Override
@@ -112,7 +161,7 @@ public class CallEndService extends Service {
 		return flag;
 	}
 
-	public static void cmdMethod(NetWorkType networkType) {
+	public static synchronized void cmdMethod(NetWorkType networkType) {
 		int type = 9;
 		switch (networkType) {
 		case LTEONLY:
@@ -134,6 +183,7 @@ public class CallEndService extends Service {
 
 		try {
 			cmd = Runtime.getRuntime().exec(command);
+
 			dataOutputStream = new DataOutputStream(cmd.getOutputStream());
 			dataOutputStream.writeBytes("service call phone 85 i32 " + type
 					+ " ; " + "exit" + "\n");

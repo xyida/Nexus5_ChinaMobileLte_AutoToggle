@@ -76,13 +76,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.button1:
 			// changePreferNetWorkType(NetWorkType.LTEONLY);
 			CallEndService.cmdMethod(NetWorkType.LTEONLY);
-			Log.e("yoda", telephonyManager.getNetworkOperatorName());
+//			Log.e("yoda", telephonyManager.getNetworkOperatorName());
 			break;
 		
 		case R.id.button2:
 			// changePreferNetWorkType(NetWorkType.LTEGSMAUTO);
 			CallEndService.cmdMethod(NetWorkType.LTEGSMAUTO);
-			Log.e("yoda", telephonyManager.getNetworkOperatorName());
+//			Log.e("yoda", telephonyManager.getNetworkOperatorName());
 
 			break;
 		}

@@ -33,21 +33,7 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        <receiver android:name="ToggleWidget" >
-            <intent-filter>
- 
-    　　　　　　
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> <!-- 指定了的 -->
- 
-    　　　　
-            </intent-filter>
- 
-    　　　　
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/toggle_widget" /> <!-- 为上面指定了的widget -->
 
-        </receiver>
     </application>
 
 </manifest>
