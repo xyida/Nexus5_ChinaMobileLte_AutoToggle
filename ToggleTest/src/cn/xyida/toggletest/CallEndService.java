@@ -23,7 +23,7 @@ import android.widget.RemoteViews;
 
 public class CallEndService extends Service {
 	private static final int COMMAND = 1;
-	private static final int DELAY = 15000;
+	private static final int DELAY = 10000;
 //	private static int currNetworkType = 9;
 	private static int toggleNetworkType=9;
 //	RemoteViews rviews;
