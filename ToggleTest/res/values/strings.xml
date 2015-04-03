@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">ToggleTest</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">测试版本,切换延时3秒搜索延时10秒，可添加桌面小部件-by 益达 有问题联系Q522918670</string>
-    <string name="toggle_widget">网络切换</string>
-
-</resources>
