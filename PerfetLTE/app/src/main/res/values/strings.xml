@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PerfetLTE</string>
+    <string name="title_activity_portal_server">PortalServer修改</string>
 </resources>

@@ -1,7 +1,11 @@
-package cn.xyida.perfetlte;
+package cn.xyida.perfectlte;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -11,13 +15,15 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 import java.util.List;
@@ -42,6 +48,40 @@ public class SettingsActivity extends PreferenceActivity{
      */
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+//        Toast.makeText(SettingsActivity.this,"点击了"+preference.getOrder()+"screen:"+preferenceScreen.getOrder(),Toast.LENGTH_SHORT).show();
+        if ("关于程序".equals(preference.getTitle())){
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("关于");
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setView(R.layout.about_layout);
+            builder.show();
+        }else if("捐赠".equals(preference.getTitle())){
+            Intent donateIntent = new Intent();
+            donateIntent.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse("https://shenghuo.alipay.com/send/payment/fill.htm?optEmail=522918670@qq.com");
+            donateIntent.setData(content_url);
+            startActivity(donateIntent);
+
+        }else if ("Portal Server 修改".equals(preference.getTitle())){
+            Intent portalIntent=new Intent();
+            portalIntent.setClass(SettingsActivity.this,PortalServerActivity.class);
+            startActivity(portalIntent);
+
+        }else if("RadioInfo".equals(preference.getTitle())){
+            Intent i = new Intent();
+            i.setComponent(new ComponentName("com.android.settings",
+                    "com.android.settings.RadioInfo"));
+            i.setAction(Intent.ACTION_MAIN);
+            startActivity(i);
+        }
+
+        return super.onPreferenceTreeClick(preferenceScreen, preference);
+
+
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -136,7 +176,7 @@ public class SettingsActivity extends PreferenceActivity{
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
         if (!isSimplePreferences(this)) {
-            loadHeadersFromResource(R.xml.pref_headers, target);
+//            loadHeadersFromResource(R.xml.pref_headers, target);
         }
     }
 
@@ -188,6 +228,14 @@ public class SettingsActivity extends PreferenceActivity{
                 // simple string representation.
                 preference.setSummary(stringValue);
             }
+
+
+
+
+
+
+
+
             return true;
         }
     };
