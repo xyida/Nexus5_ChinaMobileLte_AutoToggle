@@ -23,16 +23,18 @@
             android:key="perfectlte_searchdelay"
             android:title="网络搜索延时"
             android:defaultValue="10000"
-            android:entries="@array/pref_perfectlte_toggledelay_list_titles"
-            android:entryValues="@array/pref_perfectlte_toggledelay_list_values"
+            android:entries="@array/pref_perfectlte_searchdelay_list_titles"
+            android:entryValues="@array/pref_perfectlte_searchdelay_list_values"
             android:summary="设置搜索4G网络的耗时"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
-
+        <Preference android:title="Portal Server 修改" android:summary="去感叹号"/>
+        <Preference android:title="RadioInfo" android:summary="手机信息"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="其他">
-        <Preference android:title="关于程序" />
+        <Preference android:title="关于程序"/>
+
         <Preference android:title="捐赠" android:summary="本程序无额外权限，占用资源低，无广告，免费，乃绿色良心软件，如果本程序对您有帮助并且你喜欢的话，请怒戳！您的支持将是我继续维护开发创新的动力！"/>
 
     </PreferenceCategory>

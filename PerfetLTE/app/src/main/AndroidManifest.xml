@@ -1,7 +1,6 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.xyida.perfetlte" >
+    package="cn.xyida.perfectlte" >
 
     <application
         android:allowBackup="true"
@@ -18,13 +17,14 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SettingService"
-            android:exported="true"
-            android:enabled="true" >
-        </service>
+        <activity
+            android:name=".PortalServerActivity"
+            android:label="@string/title_activity_portal_server"
+            android:parentActivityName=".SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cn.xyida.perfectlte.SettingsActivity" />
+        </activity>
     </application>
 
 </manifest>
-
-
-
