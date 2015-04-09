@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="PortalServer修改">
+        <SwitchPreference
+            android:key="perfectlte_captive_portal_enable"
+            android:title="Captive Portal 检测"
+            android:summary="禁用或开启网络检测功能"
+            android:defaultValue="true" />
+
+        <EditTextPreference
+            android:key="perfectlte_portal_server"
+            android:title="自定义服务器地址"
+            android:summary="修改完毕之后开启飞行模式再关闭即可生效"
+            android:defaultValue="clients3.google.com"/>
+        <Preference
+            android:title="重置默认"
+            android:summary="重置PortalServer为出厂设置"/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
