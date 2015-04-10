@@ -1,6 +1,7 @@
 package cn.xyida.perfectlte;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
@@ -20,6 +21,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -88,6 +90,8 @@ public class SettingsActivity extends PreferenceActivity{
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+
+        findPreference("perfectlte_startService").setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
     }
 
     /**
@@ -184,53 +188,72 @@ public class SettingsActivity extends PreferenceActivity{
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private  Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
+//            if (preference instanceof ListPreference) {
+//                // For list preferences, look up the correct display value in
+//                // the preference's 'entries' list.
+//                ListPreference listPreference = (ListPreference) preference;
+//                int index = listPreference.findIndexOfValue(stringValue);
+//
+//                // Set the summary to reflect the new value.
+//                preference.setSummary(
+//                        (index >= 0
+//                                ? listPreference.getEntries()[index]
+//                                : null));
+//
+//            } else if (preference instanceof RingtonePreference) {
+//                // For ringtone preferences, look up the correct display value
+//                // using RingtoneManager.
+//                if (TextUtils.isEmpty(stringValue)) {
+//                    // Empty values correspond to 'silent' (no ringtone).
+//                    preference.setSummary(R.string.pref_ringtone_silent);
+//
+//                } else {
+//                    Ringtone ringtone = RingtoneManager.getRingtone(
+//                            preference.getContext(), Uri.parse(stringValue));
+//
+//                    if (ringtone == null) {
+//                        // Clear the summary if there was a lookup error.
+//                        preference.setSummary(null);
+//                    } else {
+//                        // Set the summary to reflect the new ringtone display
+//                        // name.
+//                        String name = ringtone.getTitle(preference.getContext());
+//                        preference.setSummary(name);
+//                    }
+//                }
+//
+//            } else {
+//                // For all other preferences, set the summary to the value's
+//                // simple string representation.
+//                preference.setSummary(stringValue);
+//            }
 
-                // Set the summary to reflect the new value.
-                preference.setSummary(
-                        (index >= 0
-                                ? listPreference.getEntries()[index]
-                                : null));
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
+              if ("开启后台服务".equals(preference.getTitle())){
+                  if (!Boolean.parseBoolean(stringValue)){
+                      Boolean flag=false;
+                      ActivityManager activityManager=(ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                      for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+                          if ("cn.xyida.perfectlte.CallEndService".equals(service.service.getClassName())) {
+                              flag=true;
+                              Log.e("SettingsActivity", "服务已经运行中");
+                          }
+                      }
+                      if (flag){
 
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
-            } else {
-                // For all other preferences, set the summary to the value's
-                // simple string representation.
-                preference.setSummary(stringValue);
-            }
+                          Intent intent=new Intent();
+                          intent.setAction("cn.xyida.perfectlte.intent.action.STOP_SERVICE");
+                          sendBroadcast(intent);
 
 
-
+                      }
+                  }
+              }
 
 
 
@@ -249,7 +272,7 @@ public class SettingsActivity extends PreferenceActivity{
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private  void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -261,25 +284,7 @@ public class SettingsActivity extends PreferenceActivity{
                         .getString(preference.getKey(), ""));
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
-        }
-    }
 
 //    /**
 //     * This fragment shows notification preferences only. It is used when the

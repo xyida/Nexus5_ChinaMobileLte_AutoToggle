@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.xyida.perfectlte" >
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -25,6 +27,28 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cn.xyida.perfectlte.SettingsActivity" />
         </activity>
+
+
+        <service android:name="CallEndService" >
+            <intent-filter>
+                <action android:name="WIDGET_CLICK_ACTION"/>
+            </intent-filter>
+        </service>
+
+        <receiver android:name="CallEndReciver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="cn.xyida.perfectlte.intent.action.STOP_SERVICE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider" />
+        </receiver>
     </application>
 
 </manifest>

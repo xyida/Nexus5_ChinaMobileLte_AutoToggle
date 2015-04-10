@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="设置">
 
         <CheckBoxPreference
-            android:key="perfetlte_startService"
+            android:key="perfectlte_startService"
             android:title="开启后台服务"
             android:summary="开启服务之后，程序才能正常使用！"
             android:defaultValue="true" />
@@ -12,7 +12,7 @@
         <ListPreference
             android:key="perfectlte_toggledelay"
             android:title="网络切换延时"
-            android:defaultValue="3000"
+            android:defaultValue="5000"
             android:entries="@array/pref_perfectlte_toggledelay_list_titles"
             android:entryValues="@array/pref_perfectlte_toggledelay_list_values"
             android:summary="电话挂断之后延时切换4G网络"
@@ -22,7 +22,7 @@
         <ListPreference
             android:key="perfectlte_searchdelay"
             android:title="网络搜索延时"
-            android:defaultValue="10000"
+            android:defaultValue="7000"
             android:entries="@array/pref_perfectlte_searchdelay_list_titles"
             android:entryValues="@array/pref_perfectlte_searchdelay_list_values"
             android:summary="设置搜索4G网络的耗时"
