@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -24,9 +25,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -59,6 +63,12 @@ public class SettingsActivity extends PreferenceActivity{
             builder.setTitle("关于");
             builder.setIcon(R.drawable.ic_launcher);
             builder.setView(R.layout.about_layout);
+            builder.setPositiveButton("检查更新",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    checkUpdate();
+                }
+            });
             builder.show();
         }else if("捐赠".equals(preference.getTitle())){
             Intent donateIntent = new Intent();
@@ -90,7 +100,6 @@ public class SettingsActivity extends PreferenceActivity{
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
-
         findPreference("perfectlte_startService").setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
     }
 
@@ -108,6 +117,18 @@ public class SettingsActivity extends PreferenceActivity{
 //        fakeHeader.setTitle(R.string.pref_header_settings);
 
         addPreferencesFromResource(R.xml.pref_settings);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("注意:");
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setView(R.layout.warning_layout);
+        builder.setPositiveButton("同意",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                 //checkUpdate();
+            }
+        });
+        builder.create().show();
+
 
 
 
@@ -348,4 +369,10 @@ public class SettingsActivity extends PreferenceActivity{
        }
 
 
+    public void checkUpdate() {
+
+        Uri uri = Uri.parse("market://details?id=cn.xyida.perfectlte");
+        Intent it = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(it);
+    }
 }

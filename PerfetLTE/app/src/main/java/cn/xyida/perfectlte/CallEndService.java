@@ -72,12 +72,18 @@ public class CallEndService extends Service {
     public void onStart(Intent intent, int startId) {
         // TODO Auto-generated method stub
         super.onStart(intent, startId);
-        Log.e("yoda", "CallEndService-onStart");
 
+        Log.e("yoda", "CallEndService-onStart");
+        if(intent==null){
+            Log.e("onStart","intent ==null");
+            return;
+        }
         // 处理widget点击事件
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         ComponentName provider = new ComponentName(this, WidgetProvider.class);
 //        Log.e("yoda", "CallEndService接受到广播"+intent.getAction());
+
+
         if ("WIDGET_CLICK_ACTION".equals(intent.getAction())) {
             Log.e("yoda", "CallEndService-widget按钮被点击");
 //            boolean isNeedRestartService=false;

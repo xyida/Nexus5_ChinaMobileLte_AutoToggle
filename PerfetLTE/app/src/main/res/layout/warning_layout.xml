@@ -2,26 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
 
 
     <TextView
-        android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="程序版本:beta 1.1"
+        android:text="您现在使用的是测试版本,带有未知不稳定因素，请自行承担程序可能对设备造成的风险"
         android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:paddingTop="30dp"
         android:paddingBottom="5dp"
 
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/tv_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="作者:益达"
+        android:text="使用要求："
         android:paddingLeft="30dp"
         android:paddingBottom="5dp"
 
@@ -29,28 +27,38 @@
 
         />
     <TextView
-        android:id="@+id/tv_blog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1、适用机型：Nexus5"
+        android:paddingLeft="30dp"
+        android:paddingBottom="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2、Root设备"
+        android:paddingLeft="30dp"
+        android:paddingBottom="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3、破解4G网络"
+        android:paddingLeft="30dp"
+        android:paddingBottom="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="交流群:14358506"
         android:paddingLeft="30dp"
-        android:paddingBottom="5dp"
-
-        android:textAppearance="?android:attr/textAppearanceMedium"
-
-        />
-
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:text="博客:www.cnblogs.com/xyida"
-
-        android:paddingLeft="30dp"
         android:paddingBottom="30dp"
-
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

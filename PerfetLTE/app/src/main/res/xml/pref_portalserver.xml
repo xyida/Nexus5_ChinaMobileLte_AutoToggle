@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="PortalServer修改">
+    <PreferenceCategory android:title="PortalServer修改(感谢小狐狸博文)">
         <SwitchPreference
             android:key="perfectlte_captive_portal_enable"
             android:title="Captive Portal 检测"
