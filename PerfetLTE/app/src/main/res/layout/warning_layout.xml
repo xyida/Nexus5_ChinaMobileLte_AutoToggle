@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="您现在使用的是测试版本,带有未知不稳定因素，请自行承担程序可能对设备造成的风险"
+        android:text="欢迎使用PerfectLTE，它将解决您在移动4G网络使用过程中的不便之处，本软件免费、无广告、占用资源低，欢迎传播，欢迎提议，点击同意代表您愿意承担程序可能对设备造成的风险"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:paddingTop="30dp"
@@ -48,6 +48,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="3、破解4G网络"
+        android:paddingLeft="30dp"
+        android:paddingBottom="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4、去感叹号"
         android:paddingLeft="30dp"
         android:paddingBottom="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"

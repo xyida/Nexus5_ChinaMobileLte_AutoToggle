@@ -10,7 +10,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="程序版本:beta 1.1"
+        android:text="程序版本:1.0"
         android:paddingLeft="30dp"
         android:paddingTop="30dp"
         android:paddingBottom="5dp"

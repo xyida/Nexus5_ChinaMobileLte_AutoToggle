@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -116,18 +117,27 @@ public class SettingsActivity extends PreferenceActivity{
 //        PreferenceCategory fakeHeader = new PreferenceCategory(this);
 //        fakeHeader.setTitle(R.string.pref_header_settings);
 
+
+
+
         addPreferencesFromResource(R.xml.pref_settings);
-        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("注意:");
-        builder.setIcon(R.drawable.ic_launcher);
-        builder.setView(R.layout.warning_layout);
-        builder.setPositiveButton("同意",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                 //checkUpdate();
-            }
-        });
-        builder.create().show();
+
+        SharedPreferences preferences= getSharedPreferences("cn.xyida.perfectlte_preferences", MODE_PRIVATE);
+        if( preferences.getBoolean("isFirstRun",true)){
+            final AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("注意:");
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setView(R.layout.warning_layout);
+            builder.setPositiveButton("同意",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //checkUpdate();
+                }
+            });
+            builder.create().show();
+            preferences.edit().putBoolean("isFirstRun",false).commit();
+        }
+
 
 
 
